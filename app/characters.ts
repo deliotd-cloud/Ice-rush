@@ -2,7 +2,7 @@ export const CHARACTERS = [
   {
     id: 'dante', name: 'Dante', number: 141, primary: 0xd9283e, accent: 0x164bd2,
     colors: 'Red, white & blue', description: 'Race as Dante in his signature red, white and blue suit.',
-    photo: `${import.meta.env.BASE_URL}dante-skater.png`, baseSpeed: 12.65,
+    photo: `${import.meta.env.BASE_URL}dante-skater.png?v=2`, baseSpeed: 12.65,
   },
   {
     id: 'nova', name: 'Nova', number: 72, primary: 0xff4359, accent: 0x201a31,
