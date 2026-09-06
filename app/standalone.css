@@ -1,0 +1,7 @@
+/* Local system fonts keep the standalone game independent of font services. */
+:root {
+  --font-geist-sans: 'Segoe UI', Arial, sans-serif;
+  --font-geist-mono: Consolas, 'Courier New', monospace;
+}
+
+body { -webkit-font-smoothing: antialiased; }
