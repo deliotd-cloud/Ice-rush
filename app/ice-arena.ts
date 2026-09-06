@@ -57,7 +57,7 @@ export function createIceArena(scene: THREE.Scene, renderer: THREE.WebGLRenderer
   scene.fog = new THREE.Fog(0x101925, 36, 87);
   const environmentScene = new RoomEnvironment();
   const pmrem = new THREE.PMREMGenerator(renderer);
-  const environment = pmrem.fromScene(environmentScene, 0.05);
+  const environment = pmrem.fromScene(environmentScene, 0.025);
   scene.environment = environment.texture;
   scene.environmentIntensity = 0.4;
   environmentScene.dispose();
@@ -183,6 +183,10 @@ export function createIceArena(scene: THREE.Scene, renderer: THREE.WebGLRenderer
   const world = new THREE.Vector3();
 
   return {
+    setQuality(high: boolean) {
+      reflection.visible = high;
+      (ice.material as THREE.MeshPhysicalMaterial).opacity = high ? 0.83 : 0.97;
+    },
     update(dt: number, player: SkaterModel, speed: number, moving: boolean) {
       crowd.update(dt, player.position, moving);
       key.position.copy(player.position).add(new THREE.Vector3(-5, 13, -4));

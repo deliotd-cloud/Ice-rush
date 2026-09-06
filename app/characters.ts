@@ -1,18 +1,20 @@
+const ASSET_BASE = import.meta.env?.BASE_URL ?? './';
+
 export const CHARACTERS = [
   {
     id: 'dante', name: 'Dante', number: 141, primary: 0xd9283e, accent: 0x164bd2,
     colors: 'Red, white & blue', description: 'Race as Dante in his signature red, white and blue suit.',
-    photo: `${import.meta.env.BASE_URL}dante-skater.png?v=2`, baseSpeed: 12.65,
+    photo: `${ASSET_BASE}dante-skater.png?v=2`, baseSpeed: 12.65,
   },
   {
     id: 'nova', name: 'Nova', number: 72, primary: 0xff4359, accent: 0x201a31,
     colors: 'Crimson & graphite', description: 'Take to the ice in Nova’s crimson suit and graphite helmet.',
-    photo: `${import.meta.env.BASE_URL}nova-skater.png`, baseSpeed: 12.55,
+    photo: `${ASSET_BASE}nova-skater.png`, baseSpeed: 12.55,
   },
   {
     id: 'kai', name: 'Kai', number: 88, primary: 0xffc64b, accent: 0x152941,
     colors: 'Gold & navy', description: 'Join the starting line in Kai’s gold and navy race colours.',
-    photo: `${import.meta.env.BASE_URL}kai-skater.png`, baseSpeed: 12.9,
+    photo: `${ASSET_BASE}kai-skater.png`, baseSpeed: 12.9,
   },
 ] as const;
 

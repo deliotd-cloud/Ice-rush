@@ -133,13 +133,14 @@ export function buildDetailedSkater(primaryColor: number, accentColor: number, d
   const root = new THREE.Group() as SkaterModel;
   const primary = new THREE.Color(primaryColor), blue = new THREE.Color(accentColor);
   const fabric = fabricTexture();
-  const suit = new THREE.MeshPhysicalMaterial({ color: 0xffffff, vertexColors: true, roughness: 0.55, roughnessMap: fabric,
-    bumpMap: fabric, bumpScale: 0.00055, sheen: 0.4, sheenRoughness: 0.7, sheenColor: new THREE.Color(0xadc7dc), clearcoat: 0.08 });
+  const suit = new THREE.MeshPhysicalMaterial({ color: 0xffffff, vertexColors: true, roughness: 0.46, roughnessMap: fabric,
+    bumpMap: fabric, bumpScale: 0.00035, sheen: 0.65, sheenRoughness: 0.62, sheenColor: new THREE.Color(0xb4cadc), clearcoat: 0.06 });
   const blueSuit = suit.clone();
   blueSuit.vertexColors = false;
   blueSuit.color.copy(blue);
   const white = new THREE.MeshPhysicalMaterial({ color: 0xebece5, roughness: 0.48, sheen: 0.3 });
-  const skin = new THREE.MeshPhysicalMaterial({ color: dante ? 0xc99070 : 0xa36c50, roughness: 0.62, sheen: 0.12 });
+  const skin = new THREE.MeshPhysicalMaterial({ color: dante ? 0xc99070 : raceNumber === 72 ? 0xb78061 : 0x9d6a4c, roughness: 0.58, sheen: 0.18, sheenColor: new THREE.Color(0xe6ac92) });
+  const skinDetail = new THREE.MeshStandardMaterial({ color: dante ? 0x9c6454 : 0x764734, roughness: 0.73 });
   const dark = new THREE.MeshStandardMaterial({ color: 0x11151c, roughness: 0.42 });
   const carbon = new THREE.MeshStandardMaterial({ color: 0x172128, roughness: 0.36, metalness: 0.38, roughnessMap: fabric });
   const steel = new THREE.MeshStandardMaterial({ color: 0xe4eef0, metalness: 1, roughness: 0.18 });
@@ -202,7 +203,7 @@ export function buildDetailedSkater(primaryColor: number, accentColor: number, d
   root.add(torso);
 
   const head = new THREE.Group();
-  head.scale.set(0.94, 0.98, 0.96);
+  head.scale.set(dante ? 0.94 : raceNumber === 72 ? 0.89 : 0.97, raceNumber === 72 ? 1.01 : 0.98, 0.96);
   // Narrow jaw, cheek plane and longer nose preserve the reference's face shape.
   const faceProfile = new THREE.SplineCurve([
     new THREE.Vector2(0.043, -0.127), new THREE.Vector2(0.076, -0.10),
@@ -217,16 +218,25 @@ export function buildDetailedSkater(primaryColor: number, accentColor: number, d
   oval(head, new THREE.MeshStandardMaterial({ color: 0x915a49, roughness: 0.7 }), [0.034, 0.005, 0.006], [0, -0.075, 0.092]);
   for (const side of [-1, 1]) {
     oval(head, skin, [0.022, 0.038, 0.023], [side * 0.111, -0.01, -0.004]);
+    oval(head, skinDetail, [0.005, 0.020, 0.012], [side * 0.129, -0.008, 0.004]);
+    oval(head, skinDetail, [0.004, 0.0025, 0.0035], [side * 0.012, -0.044, 0.133]);
     const strap = surface(new THREE.TubeGeometry(new THREE.CatmullRomCurve3([
       new THREE.Vector3(side * 0.123, 0.061, 0.005), new THREE.Vector3(side * 0.091, -0.09, 0.01), new THREE.Vector3(side * 0.036, -0.134, 0.045),
     ]), 16, 0.005, 6, false), dark, head);
     strap.castShadow = false;
   }
 
-  const helmetMaterial = new THREE.MeshPhysicalMaterial({ color: blue, roughness: 0.34, clearcoat: 0.32, clearcoatRoughness: 0.35 });
+  const helmetMaterial = new THREE.MeshPhysicalMaterial({ color: blue, roughness: 0.3, clearcoat: 0.48, clearcoatRoughness: 0.28, roughnessMap: fabric });
   const helmet = surface(new THREE.SphereGeometry(0.146, 64, 36, 0, Math.PI * 2, 0, Math.PI * 0.55), helmetMaterial, head);
   helmet.scale.set(0.94, 0.78, 1.03);
   helmet.position.set(0, 0.068, -0.012);
+  // The cover has a subtle centre seam, following the helmet rather than floating above it.
+  const coverSeam = new THREE.MeshStandardMaterial({ color: blue.clone().multiplyScalar(0.72), roughness: 0.65 });
+  const seamPoints = Array.from({ length: 41 }, (_, i) => {
+    const angle = -Math.PI * 0.48 + i / 40 * Math.PI * 0.96;
+    return new THREE.Vector3(0, 0.068 + Math.cos(angle) * 0.1143, -0.012 + Math.sin(angle) * 0.1507);
+  });
+  surface(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(seamPoints), 40, 0.0012, 4, false), coverSeam, head);
   const rim = surface(new THREE.TorusGeometry(0.139, 0.003, 6, 64), dark, head);
   rim.rotation.x = Math.PI / 2;
   rim.scale.set(0.94, 1.03, 1);
@@ -302,6 +312,14 @@ export function buildDetailedSkater(primaryColor: number, accentColor: number, d
     oval(boot, carbon, [0.082, 0.044, 0.176], [0, 0.083, 0.023]);
     oval(boot, white, [0.08, 0.049, 0.169], [0, 0.112, 0.031]);
     oval(boot, white, [0.063, 0.058, 0.073], [0, 0.155, -0.06]);
+    for (const side of [-1, 1]) {
+      const stitch = new THREE.CatmullRomCurve3([
+        new THREE.Vector3(side * 0.069, 0.122, -0.08),
+        new THREE.Vector3(side * 0.076, 0.126, 0.035),
+        new THREE.Vector3(side * 0.052, 0.129, 0.143),
+      ]);
+      surface(new THREE.TubeGeometry(stitch, 20, 0.0016, 4, false), carbon, boot);
+    }
     for (const z of [-0.031, 0.027, 0.077]) {
       const strap = surface(new THREE.BoxGeometry(0.142, 0.016, 0.026), dark, boot);
       strap.position.set(0, 0.154 - Math.max(0, z) * 0.28, z);
