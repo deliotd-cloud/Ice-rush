@@ -57,7 +57,7 @@ body { min-width: 320px; }
 .race-feedback { min-height:22px; color:#dfedf4; font-size:13px; font-weight:800; letter-spacing:.04em; }
 .race-feedback.is-perfect { color:#78f3c3; }
 .timing-bar { position:relative; height:6px; background:#253f51; border-radius:4px; margin:10px 0; }
-.timing-window { position:absolute; left:66%; width:23%; height:100%; background:#379a8a; border-radius:4px; }
+.timing-window { position:absolute; left:55.45%; width:31.95%; height:100%; background:#379a8a; border-radius:4px; }
 .timing-bar b { position:absolute; width:3px; height:14px; top:-4px; background:#fff; box-shadow:0 0 8px #68f2fd; }
 .timing-instruction { display:flex; align-items:center; justify-content:center; gap:8px; font-size:10px; color:#a9c9d5; }
 .timing-instruction kbd { height:23px; min-width:26px; }
